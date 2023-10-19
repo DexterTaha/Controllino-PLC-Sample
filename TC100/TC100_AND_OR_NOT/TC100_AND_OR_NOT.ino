@@ -43,7 +43,6 @@ if (digitalRead (CONTROLLINO_A0 ) && digitalRead (CONTROLLINO_A1 ))
 
 // OR
     
-
 // 0 0    0
 // 0 1    1
 // 1 0    1
@@ -56,10 +55,8 @@ if (digitalRead (CONTROLLINO_A3 ) || digitalRead (CONTROLLINO_A4 ))
 
 // NOT
     
-
 // 0    1
 // 1    0
-
     
 if (digitalRead (CONTROLLINO_A6 ) == true )
     digitalWrite (CONTROLLINO_D2 , false);
