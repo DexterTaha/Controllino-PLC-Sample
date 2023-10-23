@@ -39,7 +39,9 @@ if (digitalRead (CONTROLLINO_A0 ))
         digitalWrite (CONTROLLINO_D0, true);
      }
    else
-    digitalWrite (CONTROLLINO_D0, false);
+     {
+        digitalWrite (CONTROLLINO_D0, false);
+     }
 
 // Switch_off_delay
 
