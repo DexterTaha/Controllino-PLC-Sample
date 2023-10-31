@@ -2,46 +2,40 @@
 #include <Controllino.h>
 
 //
-//  Task: TC308_Heating_living_room
+// Tâche : TC308_Chauffage_salon
+
+// Définition des variables
+
+int iTempActuelle;  // Température actuelle de la pièce
+int iTempSouhaitee; // Température souhaitée de la pièce
+
 //
-
-//  definition of variables
-
-int  iTempIs;     // actual room temperature
-int  iTempSet;    // required room temperature
-
-//
-//  Setup
+// Configuration
 //
 void setup() {
 
-
-pinMode(CONTROLLINO_A6, INPUT);
-pinMode(CONTROLLINO_A7, INPUT);
-
-
-pinMode(CONTROLLINO_D3, OUTPUT);
-
+  pinMode(CONTROLLINO_A6, INPUT);
+  pinMode(CONTROLLINO_A7, INPUT);
+  pinMode(CONTROLLINO_D3, OUTPUT);
 }
 
-
 //
-//  Loop
+// Boucle
 //
 void loop() {
 
-// Read analog values from wind- and lightsensor
-iTempIs = analogRead (CONTROLLINO_A6);
-iTempSet = analogRead (CONTROLLINO_A7);
+  // Lire les valeurs analogiques du capteur de température de la pièce et de la température souhaitée
+  iTempActuelle = analogRead(CONTROLLINO_A6);
+  iTempSouhaitee = analogRead(CONTROLLINO_A7);
 
-// Pump for room heating on/off
-if ( iTempIs < iTempSet )
+  // Pompe de chauffage de la pièce on/off
+  if (iTempActuelle < iTempSouhaitee)
   {
-    digitalWrite (CONTROLLINO_D3, HIGH);
+    digitalWrite(CONTROLLINO_D3, HIGH);
   }
   else
   {
-    digitalWrite (CONTROLLINO_D3, LOW);
+    digitalWrite(CONTROLLINO_D3, LOW);
   }
-  
-} //loop
+
+}
