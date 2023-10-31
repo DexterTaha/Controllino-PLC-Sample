@@ -2,50 +2,45 @@
 #include <Controllino.h>
 
 //
-//  Task: TC106_Logical_connection
+// Tâche : TC106_Connection_logique
 //
 
-//  definition of variables
-
-bool bAND;
-bool bOR;
-bool bNOT;
+// Définition des variables
+bool bET;
+bool bOU;
+bool bNON;
 
 //
-//  Setup
+// Configuration
 //
 void setup() {
-
-pinMode(CONTROLLINO_A0, INPUT);
-pinMode(CONTROLLINO_A1, INPUT);
-pinMode(CONTROLLINO_A3, INPUT);
-
-pinMode(CONTROLLINO_D0, OUTPUT);
-pinMode(CONTROLLINO_D1, OUTPUT);
-pinMode(CONTROLLINO_D2, OUTPUT);
-
+  // Définir les broches en tant qu'entrées ou sorties
+  pinMode(CONTROLLINO_A0, INPUT);
+  pinMode(CONTROLLINO_A1, INPUT);
+  pinMode(CONTROLLINO_A3, INPUT);
+  pinMode(CONTROLLINO_D0, OUTPUT);
+  pinMode(CONTROLLINO_D1, OUTPUT);
+  pinMode(CONTROLLINO_D2, OUTPUT);
 }
 
 //
-//  Loop
+// Boucle
 //
 void loop() {
+  // Connection_logique
 
-// Logical_connection
-
-if ((digitalRead (CONTROLLINO_A0)==true ) && (digitalRead(CONTROLLINO_A1)==true ))
-    bAND=true;
+  if ((digitalRead(CONTROLLINO_A0) == true) && (digitalRead(CONTROLLINO_A1) == true))
+    bET = true;
   else
-    bAND=false;
-digitalWrite (CONTROLLINO_D0,bAND);
+    bET = false;
+  digitalWrite(CONTROLLINO_D0, bET);
 
-if ((digitalRead (CONTROLLINO_A3)==true ) || bAND)
-    bOR=true;
+  if ((digitalRead(CONTROLLINO_A3) == true) || bET)
+    bOU = true;
   else
-    bOR=false;
-digitalWrite (CONTROLLINO_D1,bOR);
+    bOU = false;
+  digitalWrite(CONTROLLINO_D1, bOU);
 
-bNOT = !bOR;
-digitalWrite (CONTROLLINO_D2,bNOT);
-
-} //loop
+  bNON = !bOU;
+  digitalWrite(CONTROLLINO_D2, bNON);
+}
