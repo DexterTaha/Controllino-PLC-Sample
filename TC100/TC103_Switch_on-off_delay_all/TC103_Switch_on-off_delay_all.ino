@@ -2,69 +2,54 @@
 #include <SPI.h>
 
 //
-//  Task: TC103_Switch_on-off_delay
+// Tâche : TC103_Interrupteur_marche_arret_retard
 //
 
-//  definition of variables
-
-int  iDelay=1000;
-
+// Définition des variables
+int iDelai = 1000;
 
 //
-//  Setup
+// Configuration
 //
 void setup() {
-
-pinMode(CONTROLLINO_A0, INPUT);
-pinMode(CONTROLLINO_A3, INPUT);
-pinMode(CONTROLLINO_A5, INPUT);
-
-pinMode(CONTROLLINO_D0, OUTPUT);
-pinMode(CONTROLLINO_D1, OUTPUT);
-pinMode(CONTROLLINO_D2, OUTPUT);
-
+  // Définir les broches en tant qu'entrées ou sorties
+  pinMode(CONTROLLINO_A0, INPUT);
+  pinMode(CONTROLLINO_A3, INPUT);
+  pinMode(CONTROLLINO_A5, INPUT);
+  pinMode(CONTROLLINO_D0, OUTPUT);
+  pinMode(CONTROLLINO_D1, OUTPUT);
+  pinMode(CONTROLLINO_D2, OUTPUT);
 }
 
-
 //
-//  Loop
+// Boucle
 //
 void loop() {
+  // Interrupteur_marche_retard
 
-// Switch_on_delay
+  if (digitalRead(CONTROLLINO_A0)) {
+    delay(iDelai);
+    digitalWrite(CONTROLLINO_D0, HIGH);
+  } else {
+    digitalWrite(CONTROLLINO_D0, LOW);
+  }
 
-if (digitalRead (CONTROLLINO_A0 ))
-     {
-        delay (iDelay);
-        digitalWrite (CONTROLLINO_D0, true);
-     }
-   else
-     {
-        digitalWrite (CONTROLLINO_D0, false);
-     }
+  // Interrupteur_arret_retard
 
-// Switch_off_delay
+  if (digitalRead(CONTROLLINO_A3)) {
+    digitalWrite(CONTROLLINO_D1, HIGH);
+  } else {
+    delay(iDelai);
+    digitalWrite(CONTROLLINO_D1, LOW);
+  }
 
-if (digitalRead (CONTROLLINO_A3 ))
-     {
-        digitalWrite (CONTROLLINO_D1, true);
-     }
-   else
-     {
-        delay (iDelay);
-        digitalWrite (CONTROLLINO_D1, false);
-     }
-    
-if (digitalRead (CONTROLLINO_A5 ))
-     {
-        delay (iDelay);
-        digitalWrite (CONTROLLINO_D2, true);
-     }
-   else
-     {
-        delay (iDelay);
-        digitalWrite (CONTROLLINO_D2, false);
-     }
+  // Interrupteur_arret_retard_avec_delai
 
-
-} //loop
+  if (digitalRead(CONTROLLINO_A5)) {
+    delay(iDelai);
+    digitalWrite(CONTROLLINO_D2, HIGH);
+  } else {
+    delay(iDelai);
+    digitalWrite(CONTROLLINO_D2, LOW);
+  }
+}
