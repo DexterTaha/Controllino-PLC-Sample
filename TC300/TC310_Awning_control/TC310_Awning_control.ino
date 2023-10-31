@@ -2,21 +2,20 @@
 #include <Controllino.h>
 
 //
-//  Task: TC310_Awning_control
+// Tâche : TC310_Controle_store
+
+// Définition des variables
+
+bool bAuto;           // Mode automatique-vrai, mode manuel-faux
+bool bOuverture;        // ouverture manuelle
+bool bFermeture;       // fermeture manuelle
+bool bFinOuvert;        // fin de course ouvert
+bool bFinFermé;       // fin de course fermé
+int iVent;           // valeur analogique du vent
+int iLuminosité;     // valeur analogique de la luminosité
+
 //
-
-//  definition of variables
-
-bool bAuto;           // Automatic mode-true, manuell mode-false
-bool bOpening;        // opening manually
-bool bClosing;       // closing manually
-bool bEndOpen;        // end switch open
-bool bEndClose;       // end switch closed
-int  iWind;           // analog value windy
-int  iBrightness;     // analog value brightness
-
-//
-//  Setup
+// Configuration
 //
 void setup() {
 
@@ -32,136 +31,133 @@ pinMode(CONTROLLINO_D0, OUTPUT);
 pinMode(CONTROLLINO_D1, OUTPUT);
 pinMode(CONTROLLINO_D2, OUTPUT);
 pinMode(CONTROLLINO_D3, OUTPUT);
-
 }
 
-
 //
-//  Loop
+// Boucle
 //
 void loop() {
 
-// Read analog values from wind- and brightness sensor
-iBrightness = analogRead (CONTROLLINO_A6);
-iWind = analogRead (CONTROLLINO_A7);
+// Lire les valeurs analogiques du capteur de vent et de luminosité
+iLuminosité = analogRead(CONTROLLINO_A6);
+iVent = analogRead(CONTROLLINO_A7);
 
+// Détecter le mode automatique
+if (digitalRead(CONTROLLINO_A0))
+bAuto = true;
+else
+bAuto = false;
 
-// detect automatic mode
-if ( digitalRead (CONTROLLINO_A0) )
-    bAuto = true;
-  else
-    bAuto = false;
+// Détecter l'ouverture de la fin de course
+if (digitalRead(CONTROLLINO_A3))
+{
+bFinOuvert = true;
+}
+else
+{
+bFinOuvert = false;
+}
 
-// detect End Switch opened
-if ( digitalRead (CONTROLLINO_A3) ) 
-  {
-    bEndOpen = true;
-  }
-  else
-  {
-    bEndOpen = false;
-  }
+// Détecter la fermeture de la fin de course
+if (digitalRead(CONTROLLINO_A4))
+{
+bFinFermé = true;
+}
+else
+{
+bFinFermé = false;
+}
 
-// detect End Switch Closed
-if ( digitalRead (CONTROLLINO_A4) ) 
-  {
-    bEndClose = true;
-  }
-  else
-  {
-    bEndClose = false;
-  }
+// Commutateur d'ouverture manuelle
+if (digitalRead(CONTROLLINO_A1))
+{
+bOuverture = true;
+}
+else
+{
+bOuverture = false;
+}
 
-// switch manuelly opening
-if ( digitalRead (CONTROLLINO_A1) ) 
-  {
-    bOpening = true;
-  }
-  else
-  {
-    bOpening = false;
-  }
+// Commutateur de fermeture manuelle
+if (digitalRead(CONTROLLINO_A2))
+{
+bFermeture = true;
+}
+else
+{
+bFermeture = false;
+}
 
-// switch manuelly closing
-if ( digitalRead (CONTROLLINO_A2) ) 
-  {
-    bClosing = true;
-  }
-  else
-  {
-    bClosing = false;
-  }
-
-// Automatic-, manuell mode
+// Mode automatique ou manuel
 if (bAuto)
-  {
-    // Automatic mode
-    // Open if no wind but sun
-    if ( (iWind<150) && (iBrightness>150) )
-      {
-        bOpening = true;
-        bClosing = false;
-      }
-    
-    // Close if wind
-    if ( iWind>150 )
-      {
-        bClosing = true;
-        bOpening = false;
-      }
+{
+// Mode automatique
+// Ouvrir s'il n'y a pas de vent mais du soleil
+if ((iVent < 150) && (iLuminosité > 150))
+{
+bOuverture = true;
+bFermeture = false;
+}
 
-    // Close if no brightness
-    if ( iBrightness<150 )
-      {
-        bClosing = true;
-        bOpening = false;
-      }
-  }
-  else
-  {
-    // Manuell mode
-    // Close if wind
-    if ( iWind>150 )
-      {
-        bClosing = true;
-        bOpening = false;
-      }
-  }
+// Fermer en cas de vent
+if (iVent > 150)
+{
+bFermeture = true;
+bOuverture = false;
+}
 
-// if both open and close 
-if ( bOpening && bClosing ) 
-  {
-    bClosing = true;
-    bOpening = false;
-  }
-  
-// Motor control 
-if ( bOpening && !bEndOpen ) 
-  {
-    digitalWrite ( CONTROLLINO_D3, LOW);
-    digitalWrite ( CONTROLLINO_D2, HIGH);
-  }
-  else if ( bClosing && !bEndClose ) 
-  {
-    digitalWrite ( CONTROLLINO_D2, LOW);
-    digitalWrite ( CONTROLLINO_D3, HIGH);
-  }
-  else
-  {
-    digitalWrite ( CONTROLLINO_D2, LOW);
-    digitalWrite ( CONTROLLINO_D3, LOW);
-  }
+// Fermer en cas d'absence de luminosité
+if (iLuminosité < 150)
+{
+bFermeture = true;
+bOuverture = false;
+}
+}
+else
+{
+// Mode manuel
+// Fermer en cas de vent
+if (iVent > 150)
+{
+bFermeture = true;
+bOuverture = false;
+}
+}
 
-// Signaling open 
-if ( bEndOpen ) 
-    digitalWrite ( CONTROLLINO_D0, HIGH);
-  else 
-    digitalWrite ( CONTROLLINO_D0, LOW);
+// Si les deux ouvertures et fermetures sont activées
+if (bOuverture && bFermeture)
+{
+bFermeture = true;
+bOuverture = false;
+}
 
-// Signaling closed 
-if ( bEndClose ) 
-    digitalWrite ( CONTROLLINO_D1, HIGH);
-  else 
-    digitalWrite ( CONTROLLINO_D1, LOW);
+// Contrôle du moteur
+if (bOuverture && !bFinOuvert)
+{
+digitalWrite(CONTROLLINO_D3, LOW);
+digitalWrite(CONTROLLINO_D2, HIGH);
+}
+else if (bFermeture && !bFinFermé)
+{
+digitalWrite(CONTROLLINO_D2, LOW);
+digitalWrite(CONTROLLINO_D3, HIGH);
+}
+else
+{
+digitalWrite(CONTROLLINO_D2, LOW);
+digitalWrite(CONTROLLINO_D3, LOW);
+}
 
-} //loop
+// Signal d'ouverture
+if (bFinOuvert)
+digitalWrite(CONTROLLINO_D0, HIGH);
+else
+digitalWrite(CONTROLLINO_D0, LOW);
+
+// Signal de fermeture
+if (bFinFermé)
+digitalWrite(CONTROLLINO_D1, HIGH);
+else
+digitalWrite(CONTROLLINO_D1, LOW);
+
+}
