@@ -2,124 +2,139 @@
 #include <Controllino.h>
 
 //
-//  Task: TC305_Parking_garage
+// Tâche : TC305_Garage_de_stationnement
 //
 
-//  definition of variables
+// Définition des variables
 
-bool bRequestDriveIn;           // request, drive into the garage
-bool bRequestDriveOut;          // request, drive out of the garage
-bool bEndSwitchOpen;            // end switch, garage door open
-bool bEndSwitchClosed;          // end switch, garage door closed
+bool bDemandeEntree;        // demande d'entrée dans le garage
+bool bDemandeSortie;        // demande de sortie du garage
+bool bFinDeCourseOuvert;    // fin de course, porte du garage ouverte
+bool bFinDeCourseFerme;     // fin de course, porte du garage fermée
 
 //
-//  Setup
+// Configuration
 //
 void setup() {
 
-pinMode(CONTROLLINO_A0, INPUT);
-pinMode(CONTROLLINO_A3, INPUT);
-pinMode(CONTROLLINO_A4, INPUT);
-pinMode(CONTROLLINO_A6, INPUT);
+  pinMode(CONTROLLINO_A0, INPUT);
+  pinMode(CONTROLLINO_A3, INPUT);
+  pinMode(CONTROLLINO_A4, INPUT);
+  pinMode(CONTROLLINO_A6, INPUT);
 
-pinMode(CONTROLLINO_D0, OUTPUT);
-pinMode(CONTROLLINO_D1, OUTPUT);
-pinMode(CONTROLLINO_D2, OUTPUT);
-pinMode(CONTROLLINO_D3, OUTPUT);
-
+  pinMode(CONTROLLINO_D0, OUTPUT);
+  pinMode(CONTROLLINO_D1, OUTPUT);
+  pinMode(CONTROLLINO_D2, OUTPUT);
+  pinMode(CONTROLLINO_D3, OUTPUT);
 }
 
-
 //
-//  Loop
+// Boucle
 //
 void loop() {
 
-// detect request drive in
-if ( digitalRead (CONTROLLINO_A0) ) 
+  // Détecter la demande d'entrée
+  if (digitalRead(CONTROLLINO_A0))
   {
-    bRequestDriveIn = true;
+    bDemandeEntree = true;
   }
 
-// detect request drive out
-if ( digitalRead (CONTROLLINO_A6) ) 
+  // Détecter la demande de sortie
+  if (digitalRead(CONTROLLINO_A6))
   {
-    bRequestDriveOut = true;
+    bDemandeSortie = true;
   }
 
-// process open door for drive in
-if ( bRequestDriveIn ) 
+  // Traiter l'ouverture de la porte pour entrée
+  if (bDemandeEntree)
   {
-    // switch traffic light to RED
-    digitalWrite ( CONTROLLINO_D0, HIGH);
-    digitalWrite ( CONTROLLINO_D3, HIGH);
-    delay (1000);
-    // start open door
-    while ( digitalRead (CONTROLLINO_A3) == LOW )
+    // Passer le feu de signalisation au ROUGE
+    digitalWrite(CONTROLLINO_D0, HIGH);
+    digitalWrite(CONTROLLINO_D3, HIGH);
+    delay(1000);
+
+    // Commencer à ouvrir la porte
+    while (digitalRead(CONTROLLINO_A3) == LOW)
     {
-      digitalWrite ( CONTROLLINO_D1, HIGH);
+      digitalWrite(CONTROLLINO_D1, HIGH);
     }
-    // stop opening door
-    digitalWrite ( CONTROLLINO_D1, LOW);
-    delay (1000);
-    // remove RED traffic light for entrance 
-    digitalWrite ( CONTROLLINO_D0, LOW);
-    // time to drive in
-    delay (5000);
-    // Set again RED traffic light for entrance 
-    digitalWrite ( CONTROLLINO_D0, HIGH);
-    delay (2000);
-    // start close door
-    while ( digitalRead (CONTROLLINO_A4) == LOW )
+
+    // Arrêter l'ouverture de la porte
+    digitalWrite(CONTROLLINO_D1, LOW);
+    delay(1000);
+
+    // Éteindre le feu de signalisation d'entrée
+    digitalWrite(CONTROLLINO_D0, LOW);
+
+    // Temps pour entrer
+    delay(5000);
+
+    // Réactiver le feu de signalisation d'entrée
+    digitalWrite(CONTROLLINO_D0, HIGH);
+    delay(2000);
+
+    // Commencer à fermer la porte
+    while (digitalRead(CONTROLLINO_A4) == LOW)
     {
-      digitalWrite ( CONTROLLINO_D2, HIGH);
+      digitalWrite(CONTROLLINO_D2, HIGH);
     }
-    // stop closing door
-    digitalWrite ( CONTROLLINO_D2, LOW);
-    delay (1000);
-    // switch off traffic light
-    digitalWrite ( CONTROLLINO_D0, LOW);
-    digitalWrite ( CONTROLLINO_D3, LOW);
-    // Set back request for drive in
-    bRequestDriveIn = false;
+
+    // Arrêter la fermeture de la porte
+    digitalWrite(CONTROLLINO_D2, LOW);
+    delay(1000);
+
+    // Éteindre le feu de signalisation
+    digitalWrite(CONTROLLINO_D0, LOW);
+    digitalWrite(CONTROLLINO_D3, LOW);
+
+    // Réinitialiser la demande d'entrée
+    bDemandeEntree = false;
   }
 
-// process open door for drive out
-if ( bRequestDriveOut ) 
+  // Traiter l'ouverture de la porte pour sortie
+  if (bDemandeSortie)
   {
-    // switch traffic light to RED
-    digitalWrite ( CONTROLLINO_D0, HIGH);
-    digitalWrite ( CONTROLLINO_D3, HIGH);
-    delay (1000);
-    // start open door
-    while ( digitalRead (CONTROLLINO_A3) == LOW )
+    // Passer le feu de signalisation au ROUGE
+    digitalWrite(CONTROLLINO_D0, HIGH);
+    digitalWrite(CONTROLLINO_D3, HIGH);
+    delay(1000);
+
+    // Commencer à ouvrir la porte
+    while (digitalRead(CONTROLLINO_A3) == LOW)
     {
-      digitalWrite ( CONTROLLINO_D1, HIGH);
+      digitalWrite(CONTROLLINO_D1, HIGH);
     }
-    // stop opening door
-    digitalWrite ( CONTROLLINO_D1, LOW);
-    delay (1000);
-    // remove RED traffic light for exiting 
-    digitalWrite ( CONTROLLINO_D3, LOW);
-    // time to drive out
-    delay (5000);
-    // Set again RED traffic light for exiting 
-    digitalWrite ( CONTROLLINO_D3, HIGH);
-    delay (2000);
-    // start close door
-    while ( digitalRead (CONTROLLINO_A4) == LOW )
+
+    // Arrêter l'ouverture de la porte
+    digitalWrite(CONTROLLINO_D1, LOW);
+    delay(1000);
+
+    // Éteindre le feu de signalisation de sortie
+    digitalWrite(CONTROLLINO_D3, LOW);
+
+    // Temps pour sortir
+    delay(5000);
+
+    // Réactiver le feu de signalisation de sortie
+    digitalWrite(CONTROLLINO_D3, HIGH);
+    delay(2000);
+
+    // Commencer à fermer la porte
+    while (digitalRead(CONTROLLINO_A4) == LOW)
     {
-      digitalWrite ( CONTROLLINO_D2, HIGH);
+      digitalWrite(CONTROLLINO_D2, HIGH);
     }
-    // stop closing door
-    digitalWrite ( CONTROLLINO_D2, LOW);
-    delay (1000);
-    // switch off traffic light
-    digitalWrite ( CONTROLLINO_D0, LOW);
-    digitalWrite ( CONTROLLINO_D3, LOW);
-    // Set back request for drive out
-    bRequestDriveOut = false;
+
+    // Arrêter la fermeture de la porte
+    digitalWrite(CONTROLLINO_D2, LOW);
+    delay(1000);
+
+    // Éteindre le feu de signalisation
+    digitalWrite(CONTROLLINO_D0, LOW);
+    digitalWrite(CONTROLLINO_D3, LOW);
+
+    // Réinitialiser la demande de sortie
+    bDemandeSortie = false;
   }
 
-
-} //loop
+}
