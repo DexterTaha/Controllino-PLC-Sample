@@ -2,41 +2,36 @@
 #include <Controllino.h>
 
 //
-//  Task: TC200_Nurse_call
+// Tâche : TC200_Alerte_infirmière
 //
 
-//  definition of variables
-
-bool bAlarm = false;
+// Définition des variables
+bool bAlarme = false;
 
 //
-//  Setup
+// Configuration
 //
 void setup() {
-
-pinMode(CONTROLLINO_A1, INPUT);
-pinMode(CONTROLLINO_A3, INPUT);
-pinMode(CONTROLLINO_A5, INPUT);
-pinMode(CONTROLLINO_A7, INPUT);
-
-pinMode(CONTROLLINO_D2, OUTPUT);
-
+  // Définir les broches en tant qu'entrées ou sorties
+  pinMode(CONTROLLINO_A1, INPUT);
+  pinMode(CONTROLLINO_A3, INPUT);
+  pinMode(CONTROLLINO_A5, INPUT);
+  pinMode(CONTROLLINO_A7, INPUT);
+  pinMode(CONTROLLINO_D2, OUTPUT);
 }
 
 //
-//  Loop
+// Boucle
 //
 void loop() {
+  // Réinitialisation de l'ALARME
+  if (digitalRead(CONTROLLINO_A1) == true)
+    bAlarme = false;
 
-// Resetting ALARM 
-if (digitalRead (CONTROLLINO_A1)==true ) 
-    bAlarm=false;
+  // Activation de l'Alarme
+  if ((digitalRead(CONTROLLINO_A3) == true) || (digitalRead(CONTROLLINO_A5) == true) || (digitalRead(CONTROLLINO_A7) == true))
+    bAlarme = true;
 
-// Set Alarm 
-if ((digitalRead (CONTROLLINO_A3)==true ) || (digitalRead(CONTROLLINO_A5)==true ) || (digitalRead(CONTROLLINO_A7)==true ))
-    bAlarm=true;
-
-// Output ALARM
-digitalWrite (CONTROLLINO_D2,bAlarm);
-
-} //loop
+  // Sortie de l'ALARME
+  digitalWrite(CONTROLLINO_D2, bAlarme);
+}
