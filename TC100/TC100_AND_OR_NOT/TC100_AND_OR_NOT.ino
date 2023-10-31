@@ -2,64 +2,56 @@
 #include <Controllino.h>
 
 //
-//  Task: TC100_AND_OR_NOT
+//  Tâche : TC100_AND_OR_NOT
 //
 
 //
-//  Setup
+//  Configuration
 //
 void setup() {
-
-pinMode(CONTROLLINO_A0, INPUT);
-pinMode(CONTROLLINO_A1, INPUT);
-pinMode(CONTROLLINO_A3, INPUT);
-pinMode(CONTROLLINO_A4, INPUT);
-pinMode(CONTROLLINO_A6, INPUT);
-
-pinMode(CONTROLLINO_D0, OUTPUT);
-pinMode(CONTROLLINO_D1, OUTPUT);
-pinMode(CONTROLLINO_D2, OUTPUT);
-pinMode(CONTROLLINO_D3, OUTPUT);
-
+  // Définir les broches en tant qu'entrées ou sorties
+  pinMode(CONTROLLINO_A0, INPUT);
+  pinMode(CONTROLLINO_A1, INPUT);
+  pinMode(CONTROLLINO_A3, INPUT);
+  pinMode(CONTROLLINO_A4, INPUT);
+  pinMode(CONTROLLINO_A6, INPUT);
+  pinMode(CONTROLLINO_D0, OUTPUT);
+  pinMode(CONTROLLINO_D1, OUTPUT);
+  pinMode(CONTROLLINO_D2, OUTPUT);
+  pinMode(CONTROLLINO_D3, OUTPUT);
 }
 
-
 //
-//  Loop
+//  Boucle
 //
 void loop() {
+  // Portes logiques AND, OR et NOT
 
-// AND
+  // AND
+  // 0 0    0
+  // 0 1    0
+  // 1 0    0
+  // 1 1    1
+  if (digitalRead(CONTROLLINO_A0) && digitalRead(CONTROLLINO_A1))
+    digitalWrite(CONTROLLINO_D0, HIGH);
+  else
+    digitalWrite(CONTROLLINO_D0, LOW);
 
-// 0 0    0
-// 0 1    0
-// 1 0    0
-// 1 1    1
-    
-if (digitalRead (CONTROLLINO_A0 ) && digitalRead (CONTROLLINO_A1 ))
-    digitalWrite (CONTROLLINO_D0 , true);
-    else
-    digitalWrite (CONTROLLINO_D0 , false);
+  // OR
+  // 0 0    0
+  // 0 1    1
+  // 1 0    1
+  // 1 1    1
+  if (digitalRead(CONTROLLINO_A3) || digitalRead(CONTROLLINO_A4))
+    digitalWrite(CONTROLLINO_D1, HIGH);
+  else
+    digitalWrite(CONTROLLINO_D1, LOW);
 
-// OR
-    
-// 0 0    0
-// 0 1    1
-// 1 0    1
-// 1 1    1
-    
-if (digitalRead (CONTROLLINO_A3 ) || digitalRead (CONTROLLINO_A4 ))
-    digitalWrite (CONTROLLINO_D1 , true);
-    else
-    digitalWrite (CONTROLLINO_D1 , false);
-
-// NOT
-    
-// 0    1
-// 1    0
-    
-if (digitalRead (CONTROLLINO_A6 ) == true )
-    digitalWrite (CONTROLLINO_D2 , false);
-    else
-    digitalWrite (CONTROLLINO_D2 , true);
-} 
+  // NOT
+  // 0    1
+  // 1    0
+  if (digitalRead(CONTROLLINO_A6) == HIGH)
+    digitalWrite(CONTROLLINO_D2, LOW);
+  else
+    digitalWrite(CONTROLLINO_D2, HIGH);
+}
