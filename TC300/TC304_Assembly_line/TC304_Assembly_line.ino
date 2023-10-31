@@ -2,100 +2,97 @@
 #include <Controllino.h>
 
 //
-//  Task: TC304_Assembly_line
+// Tâche : TC304_Ligne_d'assemblage
 //
 
-//  definition of variables
+// Définition des variables
 
-bool bOn;         // true-on, false-off
-bool bRunLeft;    // run to left side
-bool bRunRight;   // run to right side
-bool bEmergency;  // true-on, false-off
+bool bAllume;         // true-allumé, false-éteint
+bool bMouvementGauche;  // aller vers la gauche
+bool bMouvementDroite;   // aller vers la droite
+bool bUrgence;          // true-urgence, false-éteint
 
 //
-//  Setup
+// Configuration
 //
 void setup() {
 
-pinMode(CONTROLLINO_A0, INPUT);
-pinMode(CONTROLLINO_A3, INPUT);
-pinMode(CONTROLLINO_A4, INPUT);
-pinMode(CONTROLLINO_A6, INPUT);
+  pinMode(CONTROLLINO_A0, INPUT);
+  pinMode(CONTROLLINO_A3, INPUT);
+  pinMode(CONTROLLINO_A4, INPUT);
+  pinMode(CONTROLLINO_A6, INPUT);
 
-pinMode(CONTROLLINO_D0, OUTPUT);
-pinMode(CONTROLLINO_D1, OUTPUT);
-pinMode(CONTROLLINO_D2, OUTPUT);
-pinMode(CONTROLLINO_D3, OUTPUT);
-
+  pinMode(CONTROLLINO_D0, OUTPUT);
+  pinMode(CONTROLLINO_D1, OUTPUT);
+  pinMode(CONTROLLINO_D2, OUTPUT);
+  pinMode(CONTROLLINO_D3, OUTPUT);
 }
 
-
 //
-//  Loop
+// Boucle
 //
 void loop() {
 
-// On / Off
-if ( digitalRead (CONTROLLINO_A0) )
-    bOn = true;
+  // Allumer / Éteindre
+  if (digitalRead(CONTROLLINO_A0))
+    bAllume = true;
   else
-    bOn = false;
-  
+    bAllume = false;
 
-// detect run left side
-if ( digitalRead (CONTROLLINO_A2) ) 
+  // Détecter le mouvement vers la gauche
+  if (digitalRead(CONTROLLINO_A2))
   {
-    bRunLeft = true;
-    bRunRight = false;
+    bMouvementGauche = true;
+    bMouvementDroite = false;
   }
 
-// Detect run right side
-if ( digitalRead (CONTROLLINO_A6) ) 
+  // Détecter le mouvement vers la droite
+  if (digitalRead(CONTROLLINO_A6))
   {
-    bRunRight = true;
-    bRunLeft = false;
+    bMouvementDroite = true;
+    bMouvementGauche = false;
   }
 
-// Reset Emergency
-if ( digitalRead (CONTROLLINO_A4) ) 
+  // Réinitialiser l'urgence
+  if (digitalRead(CONTROLLINO_A4))
   {
-    bEmergency = false;
-    bRunRight = false;
-    bRunLeft = false;
+    bUrgence = false;
+    bMouvementDroite = false;
+    bMouvementGauche = false;
   }
 
-// Detect Emergency or failure run in both directions at same time
-if ( !digitalRead (CONTROLLINO_A3) || (bRunLeft && bRunRight) ) 
+  // Détecter l'urgence ou une défaillance de mouvement dans les deux sens en même temps
+  if (!digitalRead(CONTROLLINO_A3) || (bMouvementGauche && bMouvementDroite))
   {
-    bEmergency = true;
+    bUrgence = true;
   }
 
-// select motor direction
-if ( bRunLeft && !bEmergency && bOn ) 
+  // Sélectionner la direction du moteur
+  if (bMouvementGauche && !bUrgence && bAllume)
   {
-    digitalWrite ( CONTROLLINO_D0, LOW);
-    digitalWrite ( CONTROLLINO_D1, HIGH);
+    digitalWrite(CONTROLLINO_D0, LOW);
+    digitalWrite(CONTROLLINO_D1, HIGH);
   }
-  else 
+  else
   {
-    if ( bRunRight && !bEmergency && bOn ) 
+    if (bMouvementDroite && !bUrgence && bAllume)
     {
-      digitalWrite ( CONTROLLINO_D1, LOW);
-      digitalWrite ( CONTROLLINO_D0, HIGH);
+      digitalWrite(CONTROLLINO_D1, LOW);
+      digitalWrite(CONTROLLINO_D0, HIGH);
     }
     else
     {
-      digitalWrite ( CONTROLLINO_D1, LOW);
-      digitalWrite ( CONTROLLINO_D0, LOW);
+      digitalWrite(CONTROLLINO_D1, LOW);
+      digitalWrite(CONTROLLINO_D0, LOW);
     }
   }
-  
-// Signaling Emergency
-if ( bEmergency ) 
+
+  // Signaler l'urgence
+  if (bUrgence)
   {
-    digitalWrite ( CONTROLLINO_D2, HIGH);
+    digitalWrite(CONTROLLINO_D2, HIGH);
   }
   else
-    digitalWrite ( CONTROLLINO_D2, LOW);
+    digitalWrite(CONTROLLINO_D2, LOW);
 
-} //loop
+} 
