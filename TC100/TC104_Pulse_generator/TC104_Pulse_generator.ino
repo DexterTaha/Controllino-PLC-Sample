@@ -2,37 +2,32 @@
 #include <Controllino.h>
 
 //
-//  Task: TC104_Pulse_generator
+// Tâche : TC104_Générateur_d'impulsions
 //
 
-//  definition of variables
-
-int  iDelay=200;
+// Définition des variables
+int iDelai = 200;
 
 //
-//  Setup
+// Configuration
 //
 void setup() {
-
-pinMode(CONTROLLINO_A0, INPUT);
-
-pinMode(CONTROLLINO_D0, OUTPUT);
-
+  // Définir la broche en tant qu'entrée
+  pinMode(CONTROLLINO_A0, INPUT);
+  // Définir la broche en tant que sortie
+  pinMode(CONTROLLINO_D0, OUTPUT);
 }
 
 //
-//  Loop
+// Boucle
 //
 void loop() {
+  // Générateur d'impulsions
 
-// Pulse_generator
-
-if (digitalRead (CONTROLLINO_A0 ))
-     {
-        digitalWrite (CONTROLLINO_D0, true);
-        delay (iDelay);
-        digitalWrite (CONTROLLINO_D0, false);
-        delay (iDelay);
-     }
-
-} //loop
+  if (digitalRead(CONTROLLINO_A0)) {
+    digitalWrite(CONTROLLINO_D0, HIGH);
+    delay(iDelai);
+    digitalWrite(CONTROLLINO_D0, LOW);
+    delay(iDelai);
+  }
+}
