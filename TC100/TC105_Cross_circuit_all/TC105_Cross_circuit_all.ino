@@ -2,52 +2,44 @@
 #include <Controllino.h>
 
 //
-//  Task: TC105_Cross_circuit
+// Tâche : TC105_Circuit_de_croisement
 //
 
-//  definition of variables
-
-int  iDelay=200;
-bool bStatus;
-bool bToggle;
+// Définition des variables
+int iDelai = 200;
+bool bStatut;
+bool bBascule;
 
 //
-//  Setup
+// Configuration
 //
 void setup() {
-
-pinMode(CONTROLLINO_A0, INPUT);
-pinMode(CONTROLLINO_A1, INPUT);
-pinMode(CONTROLLINO_A3, INPUT);
-pinMode(CONTROLLINO_A4, INPUT);
-     
-pinMode(CONTROLLINO_D1, OUTPUT);
-pinMode(CONTROLLINO_D3, OUTPUT);
-
+  // Définir les broches en tant qu'entrées ou sorties
+  pinMode(CONTROLLINO_A0, INPUT);
+  pinMode(CONTROLLINO_A1, INPUT);
+  pinMode(CONTROLLINO_A3, INPUT);
+  pinMode(CONTROLLINO_A4, INPUT);
+  pinMode(CONTROLLINO_D1, OUTPUT);
+  pinMode(CONTROLLINO_D3, OUTPUT);
 }
 
-
 //
-//  Loop
+// Boucle
 //
 void loop() {
+  // Circuit_de_croisement
 
-// Cross_circuit
+  if (digitalRead(CONTROLLINO_A0) && (bBascule == false)) {
+    bStatut = !bStatut;
+    bBascule = true;
+  }
+  if (digitalRead(CONTROLLINO_A1) && (bBascule == false)) {
+    bStatut = !bStatut;
+    bBascule = true;
+  }
+  digitalWrite(CONTROLLINO_D0, bStatut);
+  if ((digitalRead(CONTROLLINO_A0) == false) && (digitalRead(CONTROLLINO_A1) == false))
+    bBascule = false;
 
-if (digitalRead (CONTROLLINO_A0 ) && (bToggle==false) )
-     {
-        bStatus=!bStatus;
-        bToggle=true;
-     }
-if (digitalRead (CONTROLLINO_A1 ) && (bToggle==false) )
-     {
-        bStatus=!bStatus;
-        bToggle=true;
-     }
-digitalWrite (CONTROLLINO_D0,bStatus);
-if ((digitalRead (CONTROLLINO_A0)==false ) && (digitalRead(CONTROLLINO_A1)==false ))
-  bToggle=false;
-
-delay (50);
-
-} //loop
+  delay(50);
+}
