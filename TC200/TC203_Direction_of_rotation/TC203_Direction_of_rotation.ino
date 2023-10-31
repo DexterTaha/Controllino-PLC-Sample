@@ -2,50 +2,45 @@
 #include <Controllino.h>
 
 //
-//  Task: TC203_Direction_of_rotation
+// Tâche : TC203_Sens_de_rotation
 //
 
-//  definition of variables
-
-int   iDirection=0;    // direction of rotation 0-stop, 1-right, 2-left
+// Définition des variables
+int iDirection = 0; // sens de rotation 0 - arrêt, 1 - droite, 2 - gauche
 
 //
-//  Setup
+// Configuration
 //
 void setup() {
-
-pinMode(CONTROLLINO_A1, INPUT);
-pinMode(CONTROLLINO_A2, INPUT);
-pinMode(CONTROLLINO_A4, INPUT);
-
-pinMode(CONTROLLINO_D1, OUTPUT);
-pinMode(CONTROLLINO_D2, OUTPUT);
-
+  // Définir les broches en tant qu'entrées ou sorties
+  pinMode(CONTROLLINO_A1, INPUT);
+  pinMode(CONTROLLINO_A2, INPUT);
+  pinMode(CONTROLLINO_A4, INPUT);
+  pinMode(CONTROLLINO_D1, OUTPUT);
+  pinMode(CONTROLLINO_D2, OUTPUT);
 }
 
 //
-//  Loop
+// Boucle
 //
 void loop() {
+  // Démarrer le moteur uniquement s'il est actuellement arrêté, direction gauche
+  if (iDirection == 0 && digitalRead(CONTROLLINO_A1)) {
+    digitalWrite(CONTROLLINO_D1, HIGH);
+    iDirection = 1;
+  }
 
-// start motor only if currently stopped, direction left
-if ( ( iDirection == 0 ) && digitalRead (CONTROLLINO_A1) )  {
-  digitalWrite(CONTROLLINO_D1, HIGH);
-  iDirection = 1;
+  // Démarrer le moteur uniquement s'il est actuellement arrêté, direction droite
+  if (iDirection == 0 && digitalRead(CONTROLLINO_A2)) {
+    digitalWrite(CONTROLLINO_D2, HIGH);
+    iDirection = 2;
+  }
+
+  // Arrêter le moteur à partir de n'importe quelle direction
+  if (digitalRead(CONTROLLINO_A4)) {
+    digitalWrite(CONTROLLINO_D1, LOW);
+    digitalWrite(CONTROLLINO_D2, LOW);
+    delay(5000); // Attendre que le moteur s'arrête complètement
+    iDirection = 0;
+  }
 }
-
-// start motor only if currently stopped, direction right
-if ( ( iDirection == 0 ) && digitalRead (CONTROLLINO_A2) )  {
-  digitalWrite(CONTROLLINO_D2, HIGH);
-  iDirection = 2;
-}
-
-// stop motor from any direction
-if ( digitalRead (CONTROLLINO_A4) )  {
-  digitalWrite(CONTROLLINO_D1, LOW);
-  digitalWrite(CONTROLLINO_D2, LOW);
-  delay (5000);     // Wait until Motor is fully stopped
-  iDirection = 0;
-}
-
-} //loop
