@@ -2,56 +2,49 @@
 #include <Controllino.h>
 
 //
-//  Task: TC204_Star_triangle_circuit
+// Tâche : TC204_Circuit_étoile_triangle
 //
 
-//  definition of variables
-
-int   iStatus=0;    // 0-Stop, 1-Star, 2-Triangle
+// Définition des variables
+int iStatut = 0; // 0 - Arrêt, 1 - Étoile, 2 - Triangle
 
 //
-//  Setup
+// Configuration
 //
 void setup() {
-
-pinMode(CONTROLLINO_A0, INPUT);
-pinMode(CONTROLLINO_A2, INPUT);
-pinMode(CONTROLLINO_A4, INPUT);
-
-pinMode(CONTROLLINO_D0, OUTPUT);
-pinMode(CONTROLLINO_D1, OUTPUT);
-pinMode(CONTROLLINO_D2, OUTPUT);
-
+  // Définir les broches en tant qu'entrées ou sorties
+  pinMode(CONTROLLINO_A0, INPUT);
+  pinMode(CONTROLLINO_A2, INPUT);
+  pinMode(CONTROLLINO_A4, INPUT);
+  pinMode(CONTROLLINO_D0, OUTPUT);
+  pinMode(CONTROLLINO_D1, OUTPUT);
+  pinMode(CONTROLLINO_D2, OUTPUT);
 }
 
-
 //
-//  Loop
+// Boucle
 //
 void loop() {
-
-// start motor in star circuit only if stopped
-if ( (iStatus == 0) && digitalRead (CONTROLLINO_A0) )  {
-  iStatus = 1;            // Status Motor 1-star
-  digitalWrite(CONTROLLINO_D0, HIGH);  // contactor K1
-  digitalWrite(CONTROLLINO_D1, HIGH);  // contactor K2
+  // Démarrer le moteur en circuit étoile uniquement s'il est actuellement arrêté
+  if (iStatut == 0 && digitalRead(CONTROLLINO_A0)) {
+    iStatut = 1; // Statut Moteur 1 - étoile
+    digitalWrite(CONTROLLINO_D0, HIGH); // contacteur K1
+    digitalWrite(CONTROLLINO_D1, HIGH); // contacteur K2
   }
 
-// switch motor in triangle circuit only if currenly in star
-if ( (iStatus == 1) && digitalRead (CONTROLLINO_A2) )  {
-  iStatus = 2;            // Status Motor 2-triangle
-  digitalWrite(CONTROLLINO_D1, LOW);   // contactor K2
-  digitalWrite(CONTROLLINO_D2, HIGH);  // contactor K3
+  // Passer le moteur en circuit triangle uniquement s'il est actuellement en étoile
+  if (iStatut == 1 && digitalRead(CONTROLLINO_A2)) {
+    iStatut = 2; // Statut Moteur 2 - triangle
+    digitalWrite(CONTROLLINO_D1, LOW); // contacteur K2
+    digitalWrite(CONTROLLINO_D2, HIGH); // contacteur K3
   }
 
-// Motor stoppen, unabhängig vom vorhergehenden Motor Status
-if ( digitalRead (CONTROLLINO_A4) )  {
-  iStatus = 0;            // Status Motor 0-stopped
-  digitalWrite(CONTROLLINO_D0, LOW);   // all contactor off
-  digitalWrite(CONTROLLINO_D1, LOW);   // alle contactor off
-  digitalWrite(CONTROLLINO_D2, LOW);   // alle contactor off
-  delay (5000);           // wait untl motor is fully stopped
+  // Arrêter le moteur, indépendamment de son statut précédent
+  if (digitalRead(CONTROLLINO_A4)) {
+    iStatut = 0; // Statut Moteur 0 - arrêt
+    digitalWrite(CONTROLLINO_D0, LOW); // tous les contacteurs éteints
+    digitalWrite(CONTROLLINO_D1, LOW); // tous les contacteurs éteints
+    digitalWrite(CONTROLLINO_D2, LOW); // tous les contacteurs éteints
+    delay(5000); // attendre jusqu'à ce que le moteur soit complètement arrêté
   }
-
-
-} //loop
+}
