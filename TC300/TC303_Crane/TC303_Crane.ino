@@ -2,135 +2,131 @@
 #include <Controllino.h>
 
 //
-//  Task: TC303_Crane
+// Tâche : TC303_Grue
 //
 
-//  definition of variables
+// Définition des variables
 
-bool bOn;           // true-on,  false-off
-bool bStepUp;       // lift load
-bool bStepDown;     // unload
-bool bEndTop;       // top reached
-bool bEmergency;    // emergency-true
-bool bLoadToHigh;   // load is to high
-int iCraneLoad;     // analog load value on the winch
+bool bAllume;        // true-allumé, false-éteint
+bool bMonterCharge;  // monter la charge
+bool bDescendreCharge;  // décharger
+bool bEnHaut;        // en haut atteint
+bool bUrgence;       // urgence-true
+bool bChargeTropHaute;  // la charge est trop haute
+int iChargeGrue;     // valeur de charge analogique sur le treuil
 
 //
-//  Setup
+// Configuration
 //
 void setup() {
 
-pinMode(CONTROLLINO_A0, INPUT);
-pinMode(CONTROLLINO_A1, INPUT);
-pinMode(CONTROLLINO_A2, INPUT);
-pinMode(CONTROLLINO_A3, INPUT);
-pinMode(CONTROLLINO_A4, INPUT);
-pinMode(CONTROLLINO_A5, INPUT);
+  pinMode(CONTROLLINO_A0, INPUT);
+  pinMode(CONTROLLINO_A1, INPUT);
+  pinMode(CONTROLLINO_A2, INPUT);
+  pinMode(CONTROLLINO_A3, INPUT);
+  pinMode(CONTROLLINO_A4, INPUT);
+  pinMode(CONTROLLINO_A5, INPUT);
 
-pinMode(CONTROLLINO_D0, OUTPUT);
-pinMode(CONTROLLINO_D1, OUTPUT);
-pinMode(CONTROLLINO_D2, OUTPUT);
-pinMode(CONTROLLINO_D3, OUTPUT);
-
+  pinMode(CONTROLLINO_D0, OUTPUT);
+  pinMode(CONTROLLINO_D1, OUTPUT);
+  pinMode(CONTROLLINO_D2, OUTPUT);
+  pinMode(CONTROLLINO_D3, OUTPUT);
 }
 
-
 //
-//  Loop
+// Boucle
 //
 void loop() {
 
-// Read the analog load value on the winch
-iCraneLoad = analogRead (CONTROLLINO_A7);
+  // Lire la valeur de charge analogique sur le treuil
+  iChargeGrue = analogRead(CONTROLLINO_A7);
 
-// On / Off
-if ( digitalRead (CONTROLLINO_A0) )
-    bOn = true;
+  // Allumer / Éteindre
+  if (digitalRead(CONTROLLINO_A0))
+    bAllume = true;
   else
-    bOn = false;
-  
+    bAllume = false;
 
-// detect winch on top
-if ( digitalRead (CONTROLLINO_A3) ) 
+  // Détecter la grue en haut
+  if (digitalRead(CONTROLLINO_A3))
   {
-    bEndTop = true;
-  }
-  else
-  {
-    bEndTop = false;
-  }
-
-// Detect step Up
-if ( digitalRead (CONTROLLINO_A1) && !bEndTop) 
-  {
-    bStepUp = true;
+    bEnHaut = true;
   }
   else
   {
-    bStepUp = false;
+    bEnHaut = false;
   }
 
-// Detect step Down
-if ( digitalRead (CONTROLLINO_A2) ) 
+  // Détecter la montée
+  if (digitalRead(CONTROLLINO_A1) && !bEnHaut)
   {
-    bStepDown = true;
+    bMonterCharge = true;
   }
   else
   {
-    bStepDown = false;
+    bMonterCharge = false;
   }
 
-// Reset Emergency
-if ( digitalRead (CONTROLLINO_A4) || (iCraneLoad > 600) ) 
+  // Détecter la descente
+  if (digitalRead(CONTROLLINO_A2))
   {
-    bEmergency = false;
+    bDescendreCharge = true;
+  }
+  else
+  {
+    bDescendreCharge = false;
   }
 
-// Detect Emergency
-if ( !digitalRead (CONTROLLINO_A5) ) 
+  // Réinitialiser l'urgence
+  if (digitalRead(CONTROLLINO_A4) || (iChargeGrue > 600))
   {
-    bEmergency = true;
+    bUrgence = false;
   }
 
-// Detect high load
-if ( iCraneLoad > 200 ) 
+  // Détecter l'urgence
+  if (!digitalRead(CONTROLLINO_A5))
   {
-    bLoadToHigh = true;
-  }
-  else 
-  {
-    bLoadToHigh = false;
+    bUrgence = true;
   }
 
-if ( bStepUp && !bEmergency && !bLoadToHigh && bOn ) 
+  // Détecter une charge élevée
+  if (iChargeGrue > 200)
   {
-    digitalWrite ( CONTROLLINO_D1, LOW);
-    digitalWrite ( CONTROLLINO_D0, HIGH);
+    bChargeTropHaute = true;
   }
-  else 
+  else
   {
-    if ( bStepDown && !bEmergency && bOn ) 
+    bChargeTropHaute = false;
+  }
+
+  if (bMonterCharge && !bUrgence && !bChargeTropHaute && bAllume)
+  {
+    digitalWrite(CONTROLLINO_D1, LOW);
+    digitalWrite(CONTROLLINO_D0, HIGH);
+  }
+  else
+  {
+    if (bDescendreCharge && !bUrgence && bAllume)
     {
-    digitalWrite ( CONTROLLINO_D0, LOW);
-    digitalWrite ( CONTROLLINO_D1, HIGH);
+      digitalWrite(CONTROLLINO_D0, LOW);
+      digitalWrite(CONTROLLINO_D1, HIGH);
     }
     else
     {
-      digitalWrite ( CONTROLLINO_D0, LOW);
-      digitalWrite ( CONTROLLINO_D1, LOW);
+      digitalWrite(CONTROLLINO_D0, LOW);
+      digitalWrite(CONTROLLINO_D1, LOW);
     }
   }
 
-// Signaling Crane On
-if ( bOn ) 
-    digitalWrite ( CONTROLLINO_D3, HIGH);
+  // Signaler que la grue est allumée
+  if (bAllume)
+    digitalWrite(CONTROLLINO_D3, HIGH);
   else
-    digitalWrite ( CONTROLLINO_D3, LOW);
+    digitalWrite(CONTROLLINO_D3, LOW);
 
-// Signaling Emergency
-if ( bEmergency || bLoadToHigh ) 
-    digitalWrite ( CONTROLLINO_D2, HIGH);
+  // Signaler l'urgence
+  if (bUrgence || bChargeTropHaute)
+    digitalWrite(CONTROLLINO_D2, HIGH);
   else
-    digitalWrite ( CONTROLLINO_D2, LOW);
-
-} //loop
+    digitalWrite(CONTROLLINO_D2, LOW);
+}
