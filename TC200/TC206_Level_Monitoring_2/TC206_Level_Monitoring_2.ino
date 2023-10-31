@@ -2,104 +2,87 @@
 #include <Controllino.h>
 
 //
-//  Task: TC206_Level_Monitoring_2
+// Tâche : TC206_Surveillance_de_niveau_2
 //
 
-//  definition of variables
-
-int   iValue;            // Value fill level
-                         // 0 - 1024  equals to 0V - 24V
-                         // Analog value on the Trainingsboard is 0V - 10V
-                         // usable values
-                         //   100% -> 320
-                         //    80% -> 260
-                         //    10% -> 32
-bool  bOverrun;          // false-under level, true-overrun
-bool  bFilling=false;    // true-On, false-Off
+// Définition des variables
+int iValeur;           // Niveau de remplissage
+                       // 0 - 1024 équivaut à 0V - 24V
+                       // La valeur analogique sur le tableau de formation est de 0V - 10V
+                       // Valeurs utilisables
+                       //   100% -> 320
+                       //    80% -> 260
+                       //    10% -> 32
+bool bDépassement;     // false - sous le niveau, true - dépassement
+bool bRemplissage = false; // true - En marche, false - Arrêt
 
 //
-//  Setup
+// Configuration
 //
 void setup() {
-
-pinMode(CONTROLLINO_A0, INPUT);
-pinMode(CONTROLLINO_A1, INPUT);
-pinMode(CONTROLLINO_A5, INPUT);
-
-pinMode(CONTROLLINO_D0, OUTPUT);
-pinMode(CONTROLLINO_D1, OUTPUT);
-pinMode(CONTROLLINO_D2, OUTPUT);
-pinMode(CONTROLLINO_D3, OUTPUT);
-
+  // Définir les broches en tant qu'entrées ou sorties
+  pinMode(CONTROLLINO_A0, INPUT);
+  pinMode(CONTROLLINO_A1, INPUT);
+  pinMode(CONTROLLINO_A5, INPUT);
+  pinMode(CONTROLLINO_D0, OUTPUT);
+  pinMode(CONTROLLINO_D1, OUTPUT);
+  pinMode(CONTROLLINO_D2, OUTPUT);
+  pinMode(CONTROLLINO_D3, OUTPUT);
 }
 
-
 //
-//  Loop
+// Boucle
 //
 void loop() {
+  // Lire le niveau de carburant depuis le capteur analogique
+  iValeur = analogRead(CONTROLLINO_A7);
 
-// Read fuel level from analog Sensor
-iValue = analogRead ( CONTROLLINO_A7 );
-
-// Check for overrun
-if ( digitalRead ( CONTROLLINO_A5 ) == HIGH )
-    {
-      bOverrun = true;
-      bFilling=false;
-    }
-  else
-    bOverrun = false;
-
-// push button start filling
-if ( digitalRead ( CONTROLLINO_A0 ) == HIGH )
-    bFilling = true;
-
-// push button stop filling
-if ( digitalRead ( CONTROLLINO_A1 ) == LOW )
-    bFilling = false;
-
-// start/stop pump1 and or pump2
-if ( bFilling && !bOverrun )
-  {
-    if ( iValue > 320 )    // value above 1000 - stopp both pumps
-    {
-      digitalWrite ( CONTROLLINO_D0, LOW);
-      digitalWrite ( CONTROLLINO_D1, LOW);
-      bFilling=false;
-    }
-    else
-    {
-      if ( iValue < 260 )    // value below 800 - start both pumps
-        {
-          digitalWrite ( CONTROLLINO_D0, HIGH);
-          digitalWrite ( CONTROLLINO_D1, HIGH);
-        }
-        else // value between 800 and 1000 - keep pump1 running
-        {
-          digitalWrite ( CONTROLLINO_D0, HIGH);
-          digitalWrite ( CONTROLLINO_D1, LOW);
-        }
-    }
+  // Vérifier le dépassement
+  if (digitalRead(CONTROLLINO_A5) == HIGH) {
+    bDépassement = true;
+    bRemplissage = false;
+  } else {
+    bDépassement = false;
   }
-  else  // on overrun, stop both pumps
-  {
-    digitalWrite ( CONTROLLINO_D0, LOW);
-    digitalWrite ( CONTROLLINO_D1, LOW);
-    bFilling=false;
+
+  // Bouton poussoir pour démarrer le remplissage
+  if (digitalRead(CONTROLLINO_A0) == HIGH)
+    bRemplissage = true;
+
+  // Bouton poussoir pour arrêter le remplissage
+  if (digitalRead(CONTROLLINO_A1) == LOW)
+    bRemplissage = false;
+
+  // Démarrer/arrêter la pompe1 et/ou la pompe2
+  if (bRemplissage && !bDépassement) {
+    if (iValeur > 320) { // Valeur au-dessus de 1000 - arrêter les deux pompes
+      digitalWrite(CONTROLLINO_D0, LOW);
+      digitalWrite(CONTROLLINO_D1, LOW);
+      bRemplissage = false;
+    } else {
+      if (iValeur < 260) { // Valeur en dessous de 800 - démarrer les deux pompes
+        digitalWrite(CONTROLLINO_D0, HIGH);
+        digitalWrite(CONTROLLINO_D1, HIGH);
+      } else { // Valeur entre 800 et 1000 - laisser la pompe1 en marche
+        digitalWrite(CONTROLLINO_D0, HIGH);
+        digitalWrite(CONTROLLINO_D1, LOW);
+      }
+    }
+  } else { // En cas de dépassement, arrêter les deux pompes
+    digitalWrite(CONTROLLINO_D0, LOW);
+    digitalWrite(CONTROLLINO_D1, LOW);
+    bRemplissage = false;
   }
-  
-// Signaling ALARM
-if ( bOverrun )
-    digitalWrite ( CONTROLLINO_D2, HIGH);
+
+  // Signal d'ALARME
+  if (bDépassement)
+    digitalWrite(CONTROLLINO_D2, HIGH);
   else
-    digitalWrite ( CONTROLLINO_D2, LOW);
+    digitalWrite(CONTROLLINO_D2, LOW);
 
-// Signaling <10%
-if ( iValue < 32 )
-    digitalWrite ( CONTROLLINO_D3, HIGH);
+  // Signal <10%
+  if (iValeur < 32)
+    digitalWrite(CONTROLLINO_D3, HIGH);
   else
-    digitalWrite ( CONTROLLINO_D3, LOW);
-
-
-} //loop
+    digitalWrite(CONTROLLINO_D3, LOW);
+}
