@@ -2,21 +2,21 @@
 #include <Controllino.h>
 
 //
-//  Task: TC311_Bero_Assembly_Line
+// Tâche : Ligne d'assemblage Bero (TC311)
 //
 
-//  definition of variables
+// Définition des variables
 
-bool  bOn;                          // On / Off
-bool  bRunLeft;                     // run to left side
-bool  bRunRight;                    // run to right side
-int   iCount;                       // Count pulse current second
-int   iLastCount=3;                 // Count from last second
-unsigned long previousMillis = 0;   // stored milliseconds
-unsigned long currentMillis;        // actual milliseconds
+bool bOn;                          // Marche/Arrêt
+bool bVersLaGauche;                // aller vers la gauche
+bool bVersLaDroite;                // aller vers la droite
+int iCompteur;                     // Compte le nombre d'impulsions par seconde
+int iDernierCompteur = 3;          // Compteur depuis la dernière seconde
+unsigned long tempsPrecedent = 0;  // Millisecondes précédentes
+unsigned long tempsActuel;         // Millisecondes actuelles
 
 //
-//  Setup
+// Configuration
 //
 void setup() {
 
@@ -25,77 +25,76 @@ pinMode(CONTROLLINO_A0, INPUT);
 pinMode(CONTROLLINO_D2, OUTPUT);
 pinMode(CONTROLLINO_D3, OUTPUT);
 
-// Interrupt handler
+// Gestionnaire d'interruption
 pinMode(CONTROLLINO_IN0, INPUT);
-attachInterrupt(digitalPinToInterrupt(CONTROLLINO_IN0), count, RISING);
-// LOW      to trigger the interrupt whenever the pin is low,
-// CHANGE   to trigger the interrupt whenever the pin changes value
-// RISING   to trigger when the pin goes from low to high,
-// FALLING  for when the pin goes from high to low.
+attachInterrupt(digitalPinToInterrupt(CONTROLLINO_IN0), compter, RISING);
+// LOW      pour déclencher l'interruption chaque fois que la broche est basse,
+// CHANGE   pour déclencher l'interruption chaque fois que la broche change d'état
+// RISING   pour déclencher l'interruption lorsque la broche passe de basse à haute,
+// FALLING  pour déclencher l'interruption lorsque la broche passe de haute à basse.
 
 }
 
 
 //
-//  Loop
+// Boucle
 //
 void loop() {
 
-// current time
-currentMillis = millis();
+// Temps actuel
+tempsActuel = millis();
 
-// assign iLastCount = iCount  
-if ( currentMillis - previousMillis >= 1000 ) 
-  {
-    // each edge change triggers an interrupt
-    // therefore each pulse is countes twice
-    iLastCount = iCount;
-    iCount = 0;
-    previousMillis = currentMillis;
-  }
+// Attribution de iDernierCompteur = iCompteur  
+if (tempsActuel - tempsPrecedent >= 1000 ) 
+{
+    // Chaque changement de front déclenche une interruption
+    // Par conséquent, chaque impulsion est comptée deux fois
+    iDernierCompteur = iCompteur;
+    iCompteur = 0;
+    tempsPrecedent = tempsActuel;
+}
 
-// On / Off
+// Marche/Arrêt
 if ( digitalRead (CONTROLLINO_A0) )
     bOn = true;
   else
     bOn = false;
   
 
-// detect run right side
-if ( iLastCount < 300 ) 
-  {
-    bRunLeft = false;
-    bRunRight = true;
-  }
+// Détection d'une course vers la droite
+if ( iDernierCompteur < 300 ) 
+{
+    bVersLaGauche = false;
+    bVersLaDroite = true;
+}
 
-// Detect run left side
-if ( iLastCount > 700 ) 
-  {
-    bRunLeft = true;
-    bRunRight = false;
-  }
+// Détection d'une course vers la gauche
+if ( iDernierCompteur > 700 ) 
+{
+    bVersLaGauche = true;
+    bVersLaDroite = false;
+}
 
-// start motor in required direction
-
-if ( bRunLeft && bOn ) 
-  {
+// Démarrer le moteur dans la direction requise
+if ( bVersLaGauche && bOn ) 
+{
     digitalWrite ( CONTROLLINO_D3, LOW);
     digitalWrite ( CONTROLLINO_D2, HIGH);
-  }
-  else if ( bRunRight && bOn ) 
-  {
+}
+else if ( bVersLaDroite && bOn ) 
+{
     digitalWrite ( CONTROLLINO_D2, LOW);
     digitalWrite ( CONTROLLINO_D3, HIGH);
-  }
-  else if (!bOn)
-  {
+}
+else if (!bOn)
+{
     digitalWrite ( CONTROLLINO_D2, LOW);
     digitalWrite ( CONTROLLINO_D3, LOW);
-  }
+}
 
-} //loop
+} // Boucle
 
-
-void count() {
- iCount++;
+// Fonction pour compter les impulsions
+void compter() {
+ iCompteur++;
 }
