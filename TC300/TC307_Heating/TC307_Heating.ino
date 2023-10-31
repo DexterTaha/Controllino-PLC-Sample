@@ -2,84 +2,86 @@
 #include <Controllino.h>
 
 //
-//  Task: TC307_Heating
+// Tâche : TC307_Chauffage
 
-//  definition of variables
+// Définition des variables
 
-bool bOn;           // Automatic mode-true, manuell mode-false
-bool bThermCutOff;  // switch boiler overtemperature
-int  iTempBoiler;   // Analog sensor boiler temperature
+bool bAllume;          // Mode automatique - vrai, mode manuel - faux
+bool bCoupureThermique; // Passer en mode surchauffe de la chaudière
+int iTempChaudiere;    // Capteur analogique de température de la chaudière
 
 //
-//  Setup
+// Configuration
 //
 void setup() {
 
-pinMode(CONTROLLINO_A0, INPUT);
-pinMode(CONTROLLINO_A3, INPUT);
-pinMode(CONTROLLINO_A4, INPUT);
+  pinMode(CONTROLLINO_A0, INPUT);
+  pinMode(CONTROLLINO_A3, INPUT);
+  pinMode(CONTROLLINO_A4, INPUT);
 
-pinMode(CONTROLLINO_D0, OUTPUT);
-pinMode(CONTROLLINO_D1, OUTPUT);
-pinMode(CONTROLLINO_D2, OUTPUT);
-
+  pinMode(CONTROLLINO_D0, OUTPUT);
+  pinMode(CONTROLLINO_D1, OUTPUT);
+  pinMode(CONTROLLINO_D2, OUTPUT);
 }
 
-
 //
-//  Loop
+// Boucle
 //
 void loop() {
 
-// Read analog values from wind- and lightsensor
-iTempBoiler = analogRead (CONTROLLINO_A7);
+  // Lire les valeurs analogiques du capteur de température de la chaudière
+  iTempChaudiere = analogRead(CONTROLLINO_A7);
 
-// detect on / off
-if ( digitalRead (CONTROLLINO_A0) )
-    bOn = true;
-  else
-    bOn = false;
-
-// detect RESET termal cut-off boiler
-if ( digitalRead (CONTROLLINO_A4) ) 
+  // Détecter l'allumage / l'extinction
+  if (digitalRead(CONTROLLINO_A0))
   {
-    bThermCutOff = false;
-  }
-
-// detect termalcut-off boiler
-if ( !digitalRead (CONTROLLINO_A3) ) 
-  {
-    bThermCutOff = true;
-  }
-
-// Heating torch on/off
-if ( (iTempBoiler<200) && !bThermCutOff && bOn)
-  {
-    digitalWrite (CONTROLLINO_D1, HIGH);
+    bAllume = true;
   }
   else
   {
-    digitalWrite (CONTROLLINO_D1, LOW);
+    bAllume = false;
   }
 
-// Signaling Heating on
-if ( bOn )
+  // Détecter la réinitialisation du coupe-circuit thermique de la chaudière
+  if (digitalRead(CONTROLLINO_A4))
   {
-    digitalWrite (CONTROLLINO_D0, HIGH);
+    bCoupureThermique = false;
+  }
+
+  // Détecter la coupure thermique de la chaudière
+  if (!digitalRead(CONTROLLINO_A3))
+  {
+    bCoupureThermique = true;
+  }
+
+  // Chauffage on/off
+  if ((iTempChaudiere < 200) && !bCoupureThermique && bAllume)
+  {
+    digitalWrite(CONTROLLINO_D1, HIGH);
   }
   else
   {
-    digitalWrite (CONTROLLINO_D0, LOW);
+    digitalWrite(CONTROLLINO_D1, LOW);
   }
 
-// Signaling ALARM
-if ( bThermCutOff )
+  // Signalisation du chauffage allumé
+  if (bAllume)
   {
-    digitalWrite (CONTROLLINO_D2, HIGH);
+    digitalWrite(CONTROLLINO_D0, HIGH);
   }
   else
   {
-    digitalWrite (CONTROLLINO_D2, LOW);
+    digitalWrite(CONTROLLINO_D0, LOW);
   }
-  
-} //loop
+
+  // Signalisation de l'ALARME
+  if (bCoupureThermique)
+  {
+    digitalWrite(CONTROLLINO_D2, HIGH);
+  }
+  else
+  {
+    digitalWrite(CONTROLLINO_D2, LOW);
+  }
+
+}
