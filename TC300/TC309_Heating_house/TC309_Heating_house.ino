@@ -2,98 +2,94 @@
 #include <Controllino.h>
 
 //
-//  Task: TC310_Awning_control
+// Tâche : TC310_Controle_store
+
+// Définition des variables
+
+bool bOn;             // Mode automatique-vrai, mode manuel-faux
+bool bCoupeThermique; // Commutateur de surchauffe
+int iTempChaudiere;   // Température actuelle de la chaudière
+int iTempPiece;       // Température actuelle de la pièce
+
 //
-
-//  definition of variables
-
-bool bOn;             // Automatic mode-true, manuell mode-false
-bool bThermCutOff;    // switch overtemperature
-int  iTempBoiler;     // actual temperature boler
-int  iTempRoom;       // actual temperature room
-
-//
-//  Setup
+// Configuration
 //
 void setup() {
 
-pinMode(CONTROLLINO_A0, INPUT);
-pinMode(CONTROLLINO_A1, INPUT);
-pinMode(CONTROLLINO_A3, INPUT);
+  pinMode(CONTROLLINO_A0, INPUT);
+  pinMode(CONTROLLINO_A1, INPUT);
+  pinMode(CONTROLLINO_A3, INPUT);
 
-pinMode(CONTROLLINO_D0, OUTPUT);
-pinMode(CONTROLLINO_D1, OUTPUT);
-pinMode(CONTROLLINO_D2, OUTPUT);
-pinMode(CONTROLLINO_D3, OUTPUT);
-
+  pinMode(CONTROLLINO_D0, OUTPUT);
+  pinMode(CONTROLLINO_D1, OUTPUT);
+  pinMode(CONTROLLINO_D2, OUTPUT);
+  pinMode(CONTROLLINO_D3, OUTPUT);
 }
 
-
 //
-//  Loop
+// Boucle
 //
 void loop() {
 
-// Read analog values from wind- and lightsensor
-iTempRoom = analogRead (CONTROLLINO_A6);
-iTempBoiler = analogRead (CONTROLLINO_A7);
+  // Lire les valeurs analogiques du capteur de température de la pièce et de la chaudière
+  iTempPiece = analogRead(CONTROLLINO_A6);
+  iTempChaudiere = analogRead(CONTROLLINO_A7);
 
-// detect on / off
-if ( digitalRead (CONTROLLINO_A0) )
+  // Détecter la mise en marche/arrêt
+  if (digitalRead(CONTROLLINO_A0))
     bOn = true;
   else
     bOn = false;
 
-// detect RESET termal cut-off boiler
-if ( digitalRead (CONTROLLINO_A1) ) 
+  // Réinitialiser la coupure thermique de la chaudière
+  if (digitalRead(CONTROLLINO_A1))
   {
-    bThermCutOff = false;
+    bCoupeThermique = false;
   }
 
-// detect termalcut-off boiler
-if ( !digitalRead (CONTROLLINO_A3) ) 
+  // Détecter la coupure thermique de la chaudière
+  if (!digitalRead(CONTROLLINO_A3))
   {
-    bThermCutOff = true;
+    bCoupeThermique = true;
   }
 
-// Heating torch on/off
-if ( (iTempBoiler<200) && !bThermCutOff && bOn)
+  // Activation/désactivation de la torche de chauffage
+  if ((iTempChaudiere < 200) && !bCoupeThermique && bOn)
   {
-    digitalWrite (CONTROLLINO_D1, HIGH);
+    digitalWrite(CONTROLLINO_D1, HIGH);
   }
   else
   {
-    digitalWrite (CONTROLLINO_D1, LOW);
+    digitalWrite(CONTROLLINO_D1, LOW);
   }
 
-// Pump for room heating on/off
-if ( (iTempRoom<100) && !bThermCutOff && bOn)
+  // Activation/désactivation de la pompe de chauffage de la pièce
+  if ((iTempPiece < 100) && !bCoupeThermique && bOn)
   {
-    digitalWrite (CONTROLLINO_D3, HIGH);
+    digitalWrite(CONTROLLINO_D3, HIGH);
   }
   else
   {
-    digitalWrite (CONTROLLINO_D3, LOW);
+    digitalWrite(CONTROLLINO_D3, LOW);
   }
 
-// Signaling Heating on
-if ( bOn )
+  // Signalisation du chauffage en marche
+  if (bOn)
   {
-    digitalWrite (CONTROLLINO_D0, HIGH);
+    digitalWrite(CONTROLLINO_D0, HIGH);
   }
   else
   {
-    digitalWrite (CONTROLLINO_D0, LOW);
+    digitalWrite(CONTROLLINO_D0, LOW);
   }
 
-// Signaling ALARM
-if ( bThermCutOff )
+  // Signalisation de l'ALARME
+  if (bCoupeThermique)
   {
-    digitalWrite (CONTROLLINO_D2, HIGH);
+    digitalWrite(CONTROLLINO_D2, HIGH);
   }
   else
   {
-    digitalWrite (CONTROLLINO_D2, LOW);
+    digitalWrite(CONTROLLINO_D2, LOW);
   }
-  
-} //loop
+}
