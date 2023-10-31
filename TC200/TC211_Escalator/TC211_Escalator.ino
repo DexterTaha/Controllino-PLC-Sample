@@ -2,88 +2,85 @@
 #include <Controllino.h>
 
 //
-//  Task: TC211_Escalator
+// Tâche : TC211_Escalator
 //
 
-//  definition of variables
+// Définition des variables
 
-bool  bOn=false;                       // true-On, false-Off
-bool  bEmergency;                      // true-emergency, false-OK
-bool  bBeltFailure;                    //true-failure, false-OK
-const long iEscalatorRunning = 5000;   // delay until escalater stops
-unsigned long previousMillis = 0;      // stored milliseconds
-unsigned long currentMillis;           // actual milliseconds
-
+bool bAllume = false;                // true-Allumé, false-Éteint
+bool bUrgence;                       // true-Urgence, false-OK
+bool bDefaillanceCourroie;           // true-défaillance, false-OK
+const long iEscalierEnFonctionnement = 5000;  // délai jusqu'à l'arrêt de l'escalier roulant
+unsigned long tempsPrecedent = 0;     // millisecondes précédentes stockées
+unsigned long tempsActuel;            // millisecondes actuelles
 
 //
-//  Setup
+// Configuration
 //
 void setup() {
 
-pinMode(CONTROLLINO_A0, INPUT);
-pinMode(CONTROLLINO_A1, INPUT);
-pinMode(CONTROLLINO_A2, INPUT);
-pinMode(CONTROLLINO_A4, INPUT);
-pinMode(CONTROLLINO_A6, INPUT);
-pinMode(CONTROLLINO_A7, INPUT);
+  pinMode(CONTROLLINO_A0, INPUT);
+  pinMode(CONTROLLINO_A1, INPUT);
+  pinMode(CONTROLLINO_A2, INPUT);
+  pinMode(CONTROLLINO_A4, INPUT);
+  pinMode(CONTROLLINO_A6, INPUT);
+  pinMode(CONTROLLINO_A7, INPUT);
 
-pinMode(CONTROLLINO_D0, OUTPUT);
-pinMode(CONTROLLINO_D2, OUTPUT);
-pinMode(CONTROLLINO_D3, OUTPUT);
+  pinMode(CONTROLLINO_D0, OUTPUT);
+  pinMode(CONTROLLINO_D2, OUTPUT);
+  pinMode(CONTROLLINO_D3, OUTPUT);
 }
 
-
 //
-//  Loop
+// Boucle
 //
 void loop() {
 
-currentMillis = millis();
+  tempsActuel = millis();
 
-// Button escalator On
-if ( digitalRead ( CONTROLLINO_A0 ) == HIGH )
-    bOn = true;
+  // Bouton pour allumer l'escalier roulant
+  if (digitalRead(CONTROLLINO_A0) == HIGH)
+    bAllume = true;
   else
-    bOn=false;
+    bAllume = false;
 
-// Reset emergency
-if ( digitalRead ( CONTROLLINO_A4 ) == HIGH )
-    bEmergency = false;
+  // Réinitialiser l'urgence
+  if (digitalRead(CONTROLLINO_A4) == HIGH)
+    bUrgence = false;
 
-// Check for emergency -> normally closed
-if ( (digitalRead ( CONTROLLINO_A1 ) == LOW) || (digitalRead ( CONTROLLINO_A7 ) == LOW))
-    bEmergency = true;
+  // Vérifier l'urgence -> normalement fermée
+  if ((digitalRead(CONTROLLINO_A1) == LOW) || (digitalRead(CONTROLLINO_A7) == LOW))
+    bUrgence = true;
 
-// Detect belt failure -> normally closed
-if ( digitalRead ( CONTROLLINO_A6 ) == LOW )
-    {
-      bBeltFailure = true;
-      bEmergency = true;
-    }
-  else
-    bBeltFailure = false;
-
-// Start escalator with lighning barrier
-if ( bOn && !bEmergency && (digitalRead ( CONTROLLINO_A2 ) == HIGH) )
+  // Détecter la défaillance de la courroie -> normalement fermée
+  if (digitalRead(CONTROLLINO_A6) == LOW)
   {
-    digitalWrite ( CONTROLLINO_D3, HIGH);
-    previousMillis = currentMillis;
+    bDefaillanceCourroie = true;
+    bUrgence = true;
+  }
+  else
+    bDefaillanceCourroie = false;
+
+  // Démarrer l'escalier roulant avec une barrière de détection lumineuse
+  if (bAllume && !bUrgence && (digitalRead(CONTROLLINO_A2) == HIGH))
+  {
+    digitalWrite(CONTROLLINO_D3, HIGH);
+    tempsPrecedent = tempsActuel;
   }
 
-// Stop escalator on emergency or delay ends
-if ( bEmergency || (currentMillis - previousMillis >= iEscalatorRunning) )
-  digitalWrite ( CONTROLLINO_D3, LOW);
+  // Arrêter l'escalier roulant en cas d'urgence ou à la fin du délai
+  if (bUrgence || (tempsActuel - tempsPrecedent >= iEscalierEnFonctionnement))
+    digitalWrite(CONTROLLINO_D3, LOW);
 
-// Signaling ALARM
-if ( bEmergency )
-    digitalWrite ( CONTROLLINO_D2, HIGH);
+  // Signal d'ALARME
+  if (bUrgence)
+    digitalWrite(CONTROLLINO_D2, HIGH);
   else
-    digitalWrite ( CONTROLLINO_D2, LOW);
+    digitalWrite(CONTROLLINO_D2, LOW);
 
-// Signaling Escalator On
-if ( bOn )
-    digitalWrite ( CONTROLLINO_D0, HIGH);
+  // Signal d'Escalier Roulant Allumé
+  if (bAllume)
+    digitalWrite(CONTROLLINO_D0, HIGH);
   else
-    digitalWrite ( CONTROLLINO_D0, LOW);
- 
-} //loop
+    digitalWrite(CONTROLLINO_D0, LOW);
+}
