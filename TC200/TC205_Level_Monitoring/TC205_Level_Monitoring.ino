@@ -2,73 +2,58 @@
 #include <Controllino.h>
 
 //
-//  Task: TC205_Level_Monitoring
+// Tâche : TC205_Surveillance_de_niveau
 //
 
-//  definition of variables
-
-bool  bFilling=false;    // true-On, false-Off
+// Définition des variables
+bool bRemplissage = false; // true - En marche, false - Arrêt
 
 //
-//  Setup
+// Configuration
 //
 void setup() {
-
-pinMode(CONTROLLINO_A0, INPUT);
-pinMode(CONTROLLINO_A1, INPUT);
-pinMode(CONTROLLINO_A5, INPUT);
-pinMode(CONTROLLINO_A6, INPUT);
-pinMode(CONTROLLINO_A7, INPUT);
-
-pinMode(CONTROLLINO_D0, OUTPUT);
-pinMode(CONTROLLINO_D1, OUTPUT);
-pinMode(CONTROLLINO_D3, OUTPUT);
-
+  // Définir les broches en tant qu'entrées ou sorties
+  pinMode(CONTROLLINO_A0, INPUT);
+  pinMode(CONTROLLINO_A1, INPUT);
+  pinMode(CONTROLLINO_A5, INPUT);
+  pinMode(CONTROLLINO_A6, INPUT);
+  pinMode(CONTROLLINO_A7, INPUT);
+  pinMode(CONTROLLINO_D0, OUTPUT);
+  pinMode(CONTROLLINO_D1, OUTPUT);
+  pinMode(CONTROLLINO_D3, OUTPUT);
 }
 
-
 //
-//  Loop
+// Boucle
 //
 void loop() {
+  // Bouton poussoir marche
+  if (digitalRead(CONTROLLINO_A0) == HIGH)
+    bRemplissage = true;
 
-// push button On
-if ( digitalRead ( CONTROLLINO_A0 ) == HIGH )
-    bFilling = true;
+  // Bouton poussoir arrêt
+  if (digitalRead(CONTROLLINO_A1) == LOW)
+    bRemplissage = false;
 
-// push button Off
-if ( digitalRead ( CONTROLLINO_A1 ) == LOW )
-    bFilling = false;
-
-// Start Pump1 til 100%
-if ( bFilling && digitalRead (CONTROLLINO_A7)==LOW)
-  {
-    digitalWrite ( CONTROLLINO_D0, HIGH);
-  }
-  else
-  {
-    digitalWrite ( CONTROLLINO_D0, LOW);
-    bFilling=false;
+  // Démarrer la Pompe1 jusqu'à 100%
+  if (bRemplissage && digitalRead(CONTROLLINO_A7) == LOW) {
+    digitalWrite(CONTROLLINO_D0, HIGH);
+  } else {
+    digitalWrite(CONTROLLINO_D0, LOW);
+    bRemplissage = false;
   }
 
-// Start Pump2 til 80%
-if ( bFilling && digitalRead (CONTROLLINO_A6)==LOW)
-  {
-    digitalWrite ( CONTROLLINO_D1, HIGH);
-  }
-  else
-  {
-    digitalWrite ( CONTROLLINO_D1, LOW);
+  // Démarrer la Pompe2 jusqu'à 80%
+  if (bRemplissage && digitalRead(CONTROLLINO_A6) == LOW) {
+    digitalWrite(CONTROLLINO_D1, HIGH);
+  } else {
+    digitalWrite(CONTROLLINO_D1, LOW);
   }
 
-// Signaling <10%
-if ( digitalRead (CONTROLLINO_A5)==LOW)
-  {
-    digitalWrite ( CONTROLLINO_D3, HIGH);
+  // Signal <10%
+  if (digitalRead(CONTROLLINO_A5) == LOW) {
+    digitalWrite(CONTROLLINO_D3, HIGH);
+  } else {
+    digitalWrite(CONTROLLINO_D3, LOW);
   }
-  else
-  {
-    digitalWrite ( CONTROLLINO_D3, LOW);
-  }
-
-} //loop
+}
