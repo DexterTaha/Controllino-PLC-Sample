@@ -2,101 +2,97 @@
 #include <Controllino.h>
 
 //
-//  Task: TC202_Lifting_ramp
+// Tâche : TC202_Rampe_élévatrice
 //
 
-//  definition of variables
-
-bool bOn;           // Lifting ramp ON
-bool bStepUp;       // move up
-bool bStepDown;     // move down
-bool bEndUp;        // reached top level
-bool bEndDown;      // reached bottom level
+// Définition des variables
+bool bMarche;           // Rampe élévatrice allumée
+bool bMonter;           // monter
+bool bDescendre;        // descendre
+bool bFinHaut;          // atteint le niveau supérieur
+bool bFinBas;           // atteint le niveau inférieur
 
 //
-//  Setup
+// Configuration
 //
 void setup() {
-
-pinMode(CONTROLLINO_A0, INPUT);
-pinMode(CONTROLLINO_A1, INPUT);
-pinMode(CONTROLLINO_A2, INPUT);
-pinMode(CONTROLLINO_A4, INPUT);
-pinMode(CONTROLLINO_A5, INPUT);
-
-pinMode(CONTROLLINO_D2, OUTPUT);
-pinMode(CONTROLLINO_D3, OUTPUT);
-
+  // Définir les broches en tant qu'entrées ou sorties
+  pinMode(CONTROLLINO_A0, INPUT);
+  pinMode(CONTROLLINO_A1, INPUT);
+  pinMode(CONTROLLINO_A2, INPUT);
+  pinMode(CONTROLLINO_A4, INPUT);
+  pinMode(CONTROLLINO_A5, INPUT);
+  pinMode(CONTROLLINO_D2, OUTPUT);
+  pinMode(CONTROLLINO_D3, OUTPUT);
 }
 
 //
-//  Loop
+// Boucle
 //
 void loop() {
-
-// On / Off
-if ( digitalRead (CONTROLLINO_A0) )
-    bOn = true;
+  // Allumage / Extinction
+  if (digitalRead(CONTROLLINO_A0))
+    bMarche = true;
   else
-    bOn = false;
+    bMarche = false;
 
-// detect End Switch up side
-if ( digitalRead (CONTROLLINO_A4) ) 
+  // Détection de la fin supérieure
+  if (digitalRead(CONTROLLINO_A4))
   {
-    bEndUp = true;
-  }
-  else
-  {
-    bEndUp = false;
-  }
-
-// detect End Switch down side
-if ( digitalRead (CONTROLLINO_A5) ) 
-  {
-    bEndDown = true;
+    bFinHaut = true;
   }
   else
   {
-    bEndDown = false;
+    bFinHaut = false;
   }
 
-// move up
-if ( digitalRead (CONTROLLINO_A1) && !bEndUp  && bOn) 
+  // Détection de la fin inférieure
+  if (digitalRead(CONTROLLINO_A5))
   {
-    bStepUp = true;
+    bFinBas = true;
   }
   else
   {
-    bStepUp = false;
+    bFinBas = false;
   }
 
-// move down
-if ( digitalRead (CONTROLLINO_A2) && !bEndDown && bOn) 
+  // Monter
+  if (digitalRead(CONTROLLINO_A1) && !bFinHaut && bMarche)
   {
-    bStepDown = true;
+    bMonter = true;
   }
   else
   {
-    bStepDown = false;
+    bMonter = false;
   }
 
-// switch on motor
-if ( bStepUp && !bStepDown ) 
+  // Descendre
+  if (digitalRead(CONTROLLINO_A2) && !bFinBas && bMarche)
   {
-    digitalWrite ( CONTROLLINO_D3, LOW);
-    digitalWrite ( CONTROLLINO_D2, HIGH);
+    bDescendre = true;
   }
-  else 
-  { if ( bStepDown && !bStepUp ) 
+  else
+  {
+    bDescendre = false;
+  }
+
+  // Activer le moteur
+  if (bMonter && !bDescendre)
+  {
+    digitalWrite(CONTROLLINO_D3, LOW);
+    digitalWrite(CONTROLLINO_D2, HIGH);
+  }
+  else
+  {
+    if (bDescendre && !bMonter)
     {
-      digitalWrite ( CONTROLLINO_D2, LOW);
-      digitalWrite ( CONTROLLINO_D3, HIGH);
+      digitalWrite(CONTROLLINO_D2, LOW);
+      digitalWrite(CONTROLLINO_D3, HIGH);
     }
     else
     {
-      digitalWrite ( CONTROLLINO_D2, LOW);
-      digitalWrite ( CONTROLLINO_D3, LOW);
+      digitalWrite(CONTROLLINO_D2, LOW);
+      digitalWrite(CONTROLLINO_D3, LOW);
     }
   }
-
-} //loop
+}
