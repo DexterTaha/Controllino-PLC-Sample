@@ -2,7 +2,7 @@
 #include <Controllino.h>
 
 //
-// Tâche : Ligne d'assemblage Bero (TC311)
+// Tâche : TLigne d'assemblage Bero (TC311)
 //
 
 // Définition des variables
