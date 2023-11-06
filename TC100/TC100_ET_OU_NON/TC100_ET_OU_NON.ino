@@ -2,7 +2,7 @@
 #include <Controllino.h>
 
 //
-//  Tâche : TC100_AND_OR_NOT
+//  Tâche : TC100_ET_OU_NON
 //
 
 //
