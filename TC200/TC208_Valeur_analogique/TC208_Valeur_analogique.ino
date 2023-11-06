@@ -2,7 +2,7 @@
 #include <Controllino.h>
 
 //
-// Tâche : Valeur analogique TC208
+// Tâche : TC208_Valeur_analogique
 //
 
 // Définition des variables
