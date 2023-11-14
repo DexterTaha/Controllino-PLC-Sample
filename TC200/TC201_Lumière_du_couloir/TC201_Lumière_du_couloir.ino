@@ -44,17 +44,24 @@ void loop() {
     iLumiere = LOW;
     iLumiereVeille = HIGH;
     digitalWrite(CONTROLLINO_D0, LOW);
+    digitalWrite(CONTROLLINO_D1, LOW);
     digitalWrite(CONTROLLINO_D2, LOW);
     digitalWrite(CONTROLLINO_D3, LOW);
     digitalWrite(CONTROLLINO_D4, LOW);
+    digitalWrite(CONTROLLINO_D5, LOW);
     digitalWrite(CONTROLLINO_D6, LOW);
   }
 
   // Éteindre la lumière après iDureeEclairageVeille
   if ((tempsActuel - tempsPrecedent >= iDureeEclairage + iDureeEclairageVeille) && (iLumiereVeille == HIGH)) {
     iLumiereVeille = LOW;
+    digitalWrite(CONTROLLINO_D0, LOW);
     digitalWrite(CONTROLLINO_D1, LOW);
+    digitalWrite(CONTROLLINO_D2, LOW);
+    digitalWrite(CONTROLLINO_D3, LOW);
+    digitalWrite(CONTROLLINO_D4, LOW);
     digitalWrite(CONTROLLINO_D5, LOW);
+    digitalWrite(CONTROLLINO_D6, LOW);
   }
 
   // Allumer les lumières
