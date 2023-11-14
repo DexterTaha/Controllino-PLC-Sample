@@ -16,11 +16,6 @@ int iDureeBasse;  // Valeur analogique pour la durée basse TL
 void setup() {
 
   pinMode(CONTROLLINO_A0, INPUT);
-  pinMode(CONTROLLINO_A1, INPUT);
-  pinMode(CONTROLLINO_A2, INPUT);
-  pinMode(CONTROLLINO_A3, INPUT);
-  pinMode(CONTROLLINO_A4, INPUT);
-  pinMode(CONTROLLINO_A5, INPUT);
   pinMode(CONTROLLINO_A6, INPUT);
   pinMode(CONTROLLINO_A7, INPUT);
 
