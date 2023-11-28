@@ -14,3 +14,8 @@ niveau de difficulté. L'abréviation de la carte de formation est "TC" (trainin
 <p align="center">
 <img width="500" height="" src="https://github.com/DexterTaha/Controllino-PLC-Sample/blob/main/Training%20Card%20Picture/STRUCTURE%20DES%20CARTES%20DE%20FORMATION.png">
 </p>
+
+<h2> Controllino Maxi Pinout </h2>
+<p align="center">
+<img width="500" height="" src="https://github.com/DexterTaha/Controllino-PLC-Sample/blob/main/Images/CONTROLLINO-MAXI-Automation-Pinout.jpg">
+</p>
