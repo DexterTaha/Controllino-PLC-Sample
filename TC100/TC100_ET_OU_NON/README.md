@@ -8,7 +8,8 @@
 <p>
   1. Opération AND: Les tâches liées à l'opération AND impliquent la création d'une structure où les entrées A0 et A1 contrôlent la sortie D0 à l'aide de l'opération logique AND.<br>
   2. Opération OR: Les tâches liées à l'opération OR se concentrent sur la configuration où les entrées A3 et A4 contrôlent la sortie D1 à travers l'opération logique OR.<br>
-  3. Opération NOT: Pour l'opération NOT, la tâche consiste à utiliser l'entrée A6 pour contrôler la sortie D2 à l'aide de l'opération logique NOT. Le code TC100_ET_OU_ON.ino fournit une solution complète pour cette tâche.<br>
+  3. Opération NOT: Pour l'opération NOT, la tâche consiste à utiliser l'entrée A6 pour contrôler la sortie D2 à l'aide de l'opération logique NOT.<br>
+  Le code TC100_ET_OU_ON.ino fournit une solution complète pour cette tâche.<br>
 </p>
 <h2>Capteurs/Actionneurs</h2>
 <p>
