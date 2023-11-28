@@ -3,7 +3,8 @@
 </p>
 <h2>Description de project</h2>
 <p>
-  Le projet TC 100 a été conçu dans le but de fournir une compréhension approfondie des opérations logiques de base, notamment les opérations AND, OR, et NOT. Chaque tâche de niveau 100 se concentre sur la structure et le fonctionnement de ces opérations logiques, offrant une expérience pratique de programmation pour les débutants dans le domaine.</p>
+  Le projet TC 100 a été conçu dans le but de fournir une compréhension approfondie des opérations logiques de base, notamment les opérations AND, OR, et NOT. Chaque tâche de niveau 100 se concentre sur la structure et le fonctionnement de ces opérations logiques, offrant une expérience pratique de programmation pour les débutants dans le domaine.
+</p>
 <h2>Tâches Spécifiques</h2>
 <p>
   1. Opération AND: Les tâches liées à l'opération AND impliquent la création d'une structure où les entrées A0 et A1 contrôlent la sortie D0 à l'aide de l'opération logique AND.<br>
