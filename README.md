@@ -16,11 +16,6 @@ niveau de difficulté. L'abréviation de la carte de formation est "TC" (trainin
 </p>
 
 <h2> Guide d'utilisation du CONTROLLINO PLC : Programmation, Sécurité et Recommandations  </h2>
-<p align="center">
-<img width="500" height="" src="https://github.com/DexterTaha/Controllino-PLC-Sample/blob/main/Images/CONTROLLINO-MAXI-Automation-Pinout.jpg">
-</p>
-
-<h2> Controllino Maxi Pinout </h2>
 <p>
   Le CONTROLLINO PLC est un petit ordinateur (μC = microcontrôleur) avec des périphériques basés sur
 "Plate-forme Arduino open-source". Il est installé dans un boîtier de rail DIN.
@@ -40,4 +35,9 @@ les conditions de fonctionnement et les conditions ambiantes maximales autorisé
 doit être observé.
 Lisez le manuel d’instructions attentivement et attentivement. Il contient des informations importantes sur
 Montage, utilisation et manipulation de votre CONTROLLINO.
+</p>
+
+<h2> Controllino Maxi Pinout </h2>
+<p align="center">
+<img width="500" height="" src="https://github.com/DexterTaha/Controllino-PLC-Sample/blob/main/Images/CONTROLLINO-MAXI-Automation-Pinout.jpg">
 </p>
