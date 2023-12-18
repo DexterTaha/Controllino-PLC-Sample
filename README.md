@@ -7,7 +7,7 @@
 cartes de formation permettent l'initiation ou l'approfondissement de la programmation Sketch pour Arduino.
   
 &emsp;Les tâches et les cartes d'entraînement sont divisées en 3 niveaux de difficulté et numérotées consécutivement en fonction du niveau de difficulté.
-niveau de difficulté. L'abréviation de la carte de formation est "TC" (training card).
+ L'abréviation de la carte de formation est "TC" (training card).
 </p>
 
 <h2> STRUCTURE DES CARTES DE FORMATION </h2>
